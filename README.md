@@ -20,7 +20,7 @@ yarn add lottie-colorify
 ```shell
 import Lottie from 'lottie-web';
 import colorify from 'lottie-colorify';
-import SomeAnimation from './SomeAnimation.json'
+import SomeAnimation from './SomeAnimation.json';
 
 const animation = Lottie.loadAnimation({
   container: container.current,
