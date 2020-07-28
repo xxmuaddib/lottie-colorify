@@ -1,4 +1,5 @@
 # lottie-colorify
+Change colors of your lottie animations easily from code.
 
 ## Installation
 
