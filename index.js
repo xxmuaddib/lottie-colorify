@@ -1,40 +1,54 @@
 const colorify = function(destColors = [], lottie) {
   const modifiedColors = [];
   for (let color of destColors) {
-    modifiedColors.push(hexToRgb(color));
+    modifiedColors.push(convertColorToLottieColor(color));
   }
 
-  const newLottie = modifyColors(modifiedColors, "c", lottie);
+  const newLottie = modifyColors(modifiedColors, lottie);
   return newLottie;
 };
 
-function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [
-        parseInt(result[1], 16) / 255,
-        parseInt(result[2], 16) / 255,
-        parseInt(result[3], 16) / 255,
-      ]
-    : null;
+function convertColorToLottieColor(color) {
+  if (
+    typeof color === "string" &&
+    color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)
+  ) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+    return [
+      parseInt(result[1], 16) / 255,
+      parseInt(result[2], 16) / 255,
+      parseInt(result[3], 16) / 255,
+    ];
+  } else if (
+    typeof color === "object" &&
+    color.length === 3 &&
+    color.every((item) => item >= 0 && item <= 255)
+  ) {
+    return [color[0] / 255, color[1] / 255, color[2] / 255];
+  } else {
+    throw new Error("Color can be only hex or rgb array (ex. [10,20,30])");
+  }
 }
 
-function modifyColors(colors, property, obj, i = 0) {
-  if (obj[property]) {
-    if (colors[i]) {
-      obj[property].k = colors[i];
+function modifyColors(colors, obj) {
+  let i = 0;
+  function doModify(colors, obj) {
+    if (obj.c) {
+      if (colors[i]) {
+        obj.c.k = colors[i];
+      }
+      i++;
     }
-    i++;
-  }
 
-  for (let key in obj) {
-    if (typeof obj[key] === "object") {
-      modifyColors(colors, property, obj[key], i);
+    for (let key in obj) {
+      if (typeof obj[key] === "object") {
+        doModify(colors, obj[key]);
+      }
     }
-  }
 
-  return obj;
+    return obj;
+  }
+  return doModify(colors, obj);
 }
 
-exports.colorify = colorify;
-exports.default = colorify;
+module.exports = colorify;
