@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mikayel Saghyan",
-  "license": "ISC"
+  "license": "ISC",
+  "homepage": "https://github.com/xxmuaddib/lottie-colorify",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xxmuaddib/lottie-colorify.git"
+  }
 }
