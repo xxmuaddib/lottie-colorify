@@ -12,8 +12,5 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xxmuaddib/lottie-colorify.git"
-  },
-  "publishConfig": {
-    "registry": "https://npmjs.com/"
   }
 }
