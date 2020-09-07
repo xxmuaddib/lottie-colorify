@@ -15,21 +15,42 @@ function convertColorToLottieColor(color) {
   ) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
     return [
-      parseInt(result[1], 16) / 255,
-      parseInt(result[2], 16) / 255,
-      parseInt(result[3], 16) / 255,
+      Math.round(parseInt(result[1], 16) / 255 * 100) / 100,
+      Math.round(parseInt(result[2], 16) / 255 * 100) / 100,
+      Math.round(parseInt(result[3], 16) / 255 * 100) / 100,
     ];
   } else if (
     typeof color === "object" &&
     color.length === 3 &&
     color.every((item) => item >= 0 && item <= 255)
   ) {
-    return [color[0] / 255, color[1] / 255, color[2] / 255];
+    return [Math.round(color[0] / 255 * 100) / 100, Math.round(color[1] / 255 * 100) / 100, Math.round(color[2] / 255 * 100) / 100];
   } else if (!color) {
     return undefined;
   } else {
     throw new Error("Color can be only hex or rgb array (ex. [10,20,30])");
   }
+}
+
+function replaceColor(sourceColor, targetColor, obj) {
+  const sourceLottieColor = convertColorToLottieColor(sourceColor);
+  const targetLottieColor = convertColorToLottieColor(targetColor);
+  function doReplace(sourceLottieColor, targetLottieColor, obj) {
+    if (obj.c) {
+      if (sourceLottieColor[0] === obj.c.k[0] && sourceLottieColor[1] === obj.c.k[1] && sourceLottieColor[2] === obj.c.k[2]) {
+        obj.c.k = targetLottieColor;
+      }
+    }
+
+    for (let key in obj) {
+      if (typeof obj[key] === "object") {
+        doReplace(sourceLottieColor, targetLottieColor, obj[key]);
+      }
+    }
+
+    return obj;
+  }
+  return doReplace(sourceLottieColor, targetLottieColor, obj);
 }
 
 function modifyColors(colors, obj) {
@@ -80,4 +101,4 @@ function getColors(obj) {
   return res;
 }
 
-module.exports = { colorify, getColors };
+module.exports = { colorify, getColors, replaceColor };
