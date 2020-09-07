@@ -27,6 +27,7 @@ const animation = Lottie.loadAnimation({
   container: container.current,
   animationData: colorify(['#ef32d0', [50, 100, 200], '#fe0088'], SomeAnimation),
 });
+```
 
 To replace a single color of a Lottie JSON:
 ```shell

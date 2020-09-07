@@ -1,6 +1,6 @@
 {
   "name": "lottie-colorify",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "A library to change lottie animation colors",
   "main": "index.js",
   "author": "Mikayel Saghyan",
@@ -9,5 +9,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xxmuaddib/lottie-colorify.git"
-  }
+  },
+  "keywords": "lottie"
 }
