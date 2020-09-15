@@ -2,7 +2,8 @@
   "name": "lottie-colorify",
   "version": "0.4.1",
   "description": "A library to change lottie animation colors",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "author": "Mikayel Saghyan",
   "license": "MIT",
   "homepage": "https://github.com/xxmuaddib/lottie-colorify",
@@ -10,5 +11,22 @@
     "type": "git",
     "url": "git+https://github.com/xxmuaddib/lottie-colorify.git"
   },
-  "keywords": "lottie"
+  "keywords": "lottie",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "files": ["lib/**/*"],
+  "devDependencies": {
+    "prettier": "^2.1.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.0.2"
+  }
 }
