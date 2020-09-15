@@ -18,7 +18,7 @@ yarn add lottie-colorify
 ## Usage
 
 To change colors of a Lottie JSON:
-```shell
+```jsx static
 import Lottie from 'lottie-web';
 import { colorify } from 'lottie-colorify';
 import SomeAnimation from './SomeAnimation.json';
@@ -30,7 +30,7 @@ const animation = Lottie.loadAnimation({
 ```
 
 To replace a single color of a Lottie JSON:
-```shell
+```jsx static
 import Lottie from 'lottie-web';
 import { replaceColor } from 'lottie-colorify';
 import SomeAnimation from './SomeAnimation.json';
@@ -42,7 +42,7 @@ const animation = Lottie.loadAnimation({
 
 ```
 To see the current colors of a Lottie JSON, you can use getColors function:
-```shell
+```jsx static
 import Lottie from 'lottie-web';
 import { getColors } from 'lottie-colorify';
 import SomeAnimation from './SomeAnimation.json';
