@@ -1,6 +1,6 @@
 {
   "name": "lottie-colorify",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A library to change lottie animation colors",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,7 +22,9 @@
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
   },
-  "files": ["lib/**/*"],
+  "files": [
+    "lib/**/*"
+  ],
   "devDependencies": {
     "prettier": "^2.1.1",
     "tslint": "^6.1.3",

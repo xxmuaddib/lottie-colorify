@@ -1,6 +1,6 @@
-export const colorify = function (destColors: (string | number[] | undefined)[] = [], lottie: any) {
+export const colorify = (destColors: (string | number[] | undefined)[] = [], lottie: any) => {
   const modifiedColors = [];
-  for (let color of destColors) {
+  for (const color of destColors) {
     modifiedColors.push(convertColorToLottieColor(color));
   }
 
@@ -8,7 +8,7 @@ export const colorify = function (destColors: (string | number[] | undefined)[] 
   return newLottie;
 };
 
-function convertColorToLottieColor(color: string | number[] | undefined) {
+const convertColorToLottieColor = (color: string | number[] | undefined) => {
   if (typeof color === 'string' && color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
     if (!result) {
@@ -30,12 +30,12 @@ function convertColorToLottieColor(color: string | number[] | undefined) {
   } else {
     throw new Error('Color can be only hex or rgb array (ex. [10,20,30])');
   }
-}
+};
 
-export function replaceColor(sourceColor: string | number[], targetColor: string | number[], obj: any) {
-  const sourceLottieColor = convertColorToLottieColor(sourceColor);
-  const targetLottieColor = convertColorToLottieColor(targetColor);
-  if (!sourceLottieColor || !targetLottieColor) {
+export const replaceColor = (sourceColor: string | number[], targetColor: string | number[], lottieObj: any) => {
+  const genSourceLottieColor = convertColorToLottieColor(sourceColor);
+  const genTargetLottieColor = convertColorToLottieColor(targetColor);
+  if (!genSourceLottieColor || !genTargetLottieColor) {
     throw new Error('Proper colors must be used for both source and target');
   }
   function doReplace(sourceLottieColor: number[], targetLottieColor: number[], obj: any) {
@@ -49,7 +49,7 @@ export function replaceColor(sourceColor: string | number[], targetColor: string
       }
     }
 
-    for (let key in obj) {
+    for (const key in obj) {
       if (typeof obj[key] === 'object') {
         doReplace(sourceLottieColor, targetLottieColor, obj[key]);
       }
@@ -57,10 +57,10 @@ export function replaceColor(sourceColor: string | number[], targetColor: string
 
     return obj;
   }
-  return doReplace(sourceLottieColor, targetLottieColor, obj);
-}
+  return doReplace(genSourceLottieColor, genTargetLottieColor, lottieObj);
+};
 
-function modifyColors(colors: any, obj: any) {
+const modifyColors = (colorsArray: any, lottieObj: any) => {
   let i = 0;
   function doModify(colors: any, obj: any) {
     if (obj.c) {
@@ -70,7 +70,7 @@ function modifyColors(colors: any, obj: any) {
       i++;
     }
 
-    for (let key in obj) {
+    for (const key in obj) {
       if (typeof obj[key] === 'object') {
         doModify(colors, obj[key]);
       }
@@ -78,21 +78,21 @@ function modifyColors(colors: any, obj: any) {
 
     return obj;
   }
-  return doModify(colors, obj);
-}
+  return doModify(colorsArray, lottieObj);
+};
 
-function convertLottieColorToRgb(lottieColor: number[]) {
+const convertLottieColorToRgb = (lottieColor: number[]) => {
   return [Math.round(lottieColor[0] * 255), Math.round(lottieColor[1] * 255), Math.round(lottieColor[2] * 255)];
-}
+};
 
-export function getColors(obj: any): any {
+export const getColors = (lottieObj: any): any => {
   const res: any = [];
   function doGet(obj: any) {
     if (obj.c) {
       res.push(convertLottieColorToRgb(obj.c.k));
     }
 
-    for (let key in obj) {
+    for (const key in obj) {
       if (typeof obj[key] === 'object') {
         doGet(obj[key]);
       }
@@ -100,6 +100,6 @@ export function getColors(obj: any): any {
 
     return res;
   }
-  doGet(obj);
+  doGet(lottieObj);
   return res;
-}
+};
