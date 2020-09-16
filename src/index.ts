@@ -39,7 +39,7 @@ export const replaceColor = (sourceColor: string | number[], targetColor: string
     throw new Error('Proper colors must be used for both source and target');
   }
   function doReplace(sourceLottieColor: number[], targetLottieColor: number[], obj: any) {
-    if (obj.c) {
+    if (obj.c && obj.c.k) {
       if (
         sourceLottieColor[0] === obj.c.k[0] &&
         sourceLottieColor[1] === obj.c.k[1] &&
@@ -63,7 +63,7 @@ export const replaceColor = (sourceColor: string | number[], targetColor: string
 const modifyColors = (colorsArray: any, lottieObj: any) => {
   let i = 0;
   function doModify(colors: any, obj: any) {
-    if (obj.c) {
+    if (obj.c && obj.c.k) {
       if (colors[i]) {
         obj.c.k = colors[i];
       }
@@ -88,7 +88,7 @@ const convertLottieColorToRgb = (lottieColor: number[]) => {
 export const getColors = (lottieObj: any): any => {
   const res: any = [];
   function doGet(obj: any) {
-    if (obj.c) {
+    if (obj.c && obj.c.k) {
       res.push(convertLottieColorToRgb(obj.c.k));
     }
 

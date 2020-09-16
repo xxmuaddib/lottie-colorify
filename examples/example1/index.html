@@ -1,0 +1,26 @@
+<html style="width: 100%; height: 100%">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.3/lottie.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+  </head>
+  <body style="background-color: #ccc; margin: 0px; height: 100%; font-family: sans-serif; font-size: 10px">
+    <div style="width: 100%; height: 100%; background-color: #333" id="bodymovin"></div>
+
+    <script>
+      requirejs(['../../lib/umd/index'], function (lc) {
+        $.getJSON('https://assets8.lottiefiles.com/packages/lf20_DcPxO4.json', function (data) {
+          var animData = {
+            wrapper: document.getElementById('bodymovin'),
+            animType: 'html',
+            loop: true,
+            prerender: true,
+            autoplay: true,
+            animationData: lc.colorify(['#3adf88', undefined, [10, 100, 200]], data),
+          };
+          var anim = bodymovin.loadAnimation(animData);
+        });
+      });
+    </script>
+  </body>
+</html>

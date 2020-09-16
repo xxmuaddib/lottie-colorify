@@ -1,6 +1,6 @@
 {
   "name": "lottie-colorify",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A library to change lottie animation colors",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -13,7 +13,10 @@
   },
   "keywords": "lottie",
   "scripts": {
-    "build": "tsc",
+    "build:umd": "tsc --module umd src/index.ts --outDir ./lib/umd",
+    "build:amd": "tsc --module amd src/index.ts --outDir ./lib/amd",
+    "build:cjs": "tsc",
+    "build": "npm run build:amd && npm run build:umd && npm run build:cjs",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
