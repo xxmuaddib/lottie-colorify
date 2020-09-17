@@ -99,15 +99,20 @@ function App() {
         LottieSample,
       ),
     });
-    Lottie.loadAnimation({
-      container: containerOriginal.current,
-      animationData: LottieSample,
-    });
 
     Lottie.loadAnimation({
       container: containerFlat.current,
       animationData: flatten('#ef4efa', LottieSample),
     });
+
+    // TODO: LottieSample is destroyed after using it. You can't use it again after using following block:
+    // BLOCK START
+    Lottie.loadAnimation({
+      container: containerOriginal.current,
+      animationData: LottieSample,
+    });
+    // BLOCK END
+    // You cannot use LottieSample here. Need to investigate
   }, []);
 
   return (
