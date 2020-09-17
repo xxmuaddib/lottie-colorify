@@ -1,10 +1,12 @@
+import cloneDeep from 'lodash.clonedeep';
+
 export const colorify = (destColors: (string | number[] | undefined)[] = [], lottie: any) => {
   const modifiedColors = [];
   for (const color of destColors) {
     modifiedColors.push(convertColorToLottieColor(color));
   }
 
-  const newLottie = modifyColors(modifiedColors, lottie);
+  const newLottie = modifyColors(modifiedColors, cloneDeep(lottie));
   return newLottie;
 };
 
@@ -57,7 +59,28 @@ export const replaceColor = (sourceColor: string | number[], targetColor: string
 
     return obj;
   }
-  return doReplace(genSourceLottieColor, genTargetLottieColor, lottieObj);
+  return doReplace(genSourceLottieColor, genTargetLottieColor, cloneDeep(lottieObj));
+};
+
+export const flatten = (targetColor: string | number[], lottieObj: any) => {
+  const genTargetLottieColor = convertColorToLottieColor(targetColor);
+  if (!genTargetLottieColor) {
+    throw new Error('Proper colors must be used for target');
+  }
+  function doFlatten(targetLottieColor: number[], obj: any) {
+    if (obj.c && obj.c.k) {
+      obj.c.k = targetLottieColor;
+    }
+
+    for (const key in obj) {
+      if (typeof obj[key] === 'object') {
+        doFlatten(targetLottieColor, obj[key]);
+      }
+    }
+
+    return obj;
+  }
+  return doFlatten(genTargetLottieColor, cloneDeep(lottieObj));
 };
 
 const modifyColors = (colorsArray: any, lottieObj: any) => {

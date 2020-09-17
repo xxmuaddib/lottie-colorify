@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+}
+
+.Container {
+  width: 100%;
+  display: flex;
+}
+
+.LottieContainer {
+  height: 400px;
+}
