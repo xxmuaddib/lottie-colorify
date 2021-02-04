@@ -9,14 +9,14 @@
 
     <script>
       requirejs(['../../lib/umd/index'], function (lc) {
-        $.getJSON('https://assets8.lottiefiles.com/packages/lf20_DcPxO4.json', function (data) {
+        $.getJSON('https://s3.us-east-2.amazonaws.com/animatly.io/Illustrations/json/04.json', function (data) {
           var animData = {
             wrapper: document.getElementById('bodymovin'),
             animType: 'html',
             loop: true,
             prerender: true,
             autoplay: true,
-            animationData: lc.colorify(['#3adf88', undefined, [10, 100, 200], [50, 100, 10], [200, 100, 10], [200, 100, 120], [200, 200, 10]], data),
+            animationData: lc.flatten('#ff0000', data),
           };
           var anim = bodymovin.loadAnimation(animData);
         });

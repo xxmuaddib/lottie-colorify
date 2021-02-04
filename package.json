@@ -1,6 +1,6 @@
 {
   "name": "lottie-colorify",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "A library to change lottie animation colors",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
