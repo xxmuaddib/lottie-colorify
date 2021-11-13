@@ -1,12 +1,12 @@
 import cloneDeep from 'lodash.clonedeep';
 
-export const colorify = (destColors: (string | number[] | undefined)[] = [], lottie: any) => {
+export const colorify = (destColors: (string | number[] | undefined)[] = [], lottieObj: any, immutable = true) => {
   const modifiedColors = [];
   for (const color of destColors) {
     modifiedColors.push(convertColorToLottieColor(color));
   }
 
-  const newLottie = modifyColors(modifiedColors, cloneDeep(lottie));
+  const newLottie = modifyColors(modifiedColors, immutable ? cloneDeep(lottieObj) : lottieObj);
   return newLottie;
 };
 
@@ -36,7 +36,12 @@ const convertColorToLottieColor = (color: string | number[] | undefined) => {
 
 const round = (n: number) => Math.round(n * 1000) / 1000;
 
-export const replaceColor = (sourceColor: string | number[], targetColor: string | number[], lottieObj: any, immutable = true) => {
+export const replaceColor = (
+  sourceColor: string | number[],
+  targetColor: string | number[],
+  lottieObj: any,
+  immutable = true,
+) => {
   const genSourceLottieColor = convertColorToLottieColor(sourceColor);
   const genTargetLottieColor = convertColorToLottieColor(targetColor);
   if (!genSourceLottieColor || !genTargetLottieColor) {
@@ -70,7 +75,7 @@ export const replaceColor = (sourceColor: string | number[], targetColor: string
   return doReplace(genSourceLottieColor, genTargetLottieColor, immutable ? cloneDeep(lottieObj) : lottieObj);
 };
 
-export const flatten = (targetColor: string | number[], lottieObj: any) => {
+export const flatten = (targetColor: string | number[], lottieObj: any, immutable = true) => {
   const genTargetLottieColor = convertColorToLottieColor(targetColor);
   if (!genTargetLottieColor) {
     throw new Error('Proper colors must be used for target');
@@ -94,7 +99,7 @@ export const flatten = (targetColor: string | number[], lottieObj: any) => {
 
     return obj;
   }
-  return doFlatten(genTargetLottieColor, cloneDeep(lottieObj));
+  return doFlatten(genTargetLottieColor, immutable ? cloneDeep(lottieObj) : lottieObj);
 };
 
 const modifyColors = (colorsArray: any, lottieObj: any) => {
