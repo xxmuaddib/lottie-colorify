@@ -36,7 +36,7 @@ const convertColorToLottieColor = (color: string | number[] | undefined) => {
 
 const round = (n: number) => Math.round(n * 1000) / 1000;
 
-export const replaceColor = (sourceColor: string | number[], targetColor: string | number[], lottieObj: any) => {
+export const replaceColor = (sourceColor: string | number[], targetColor: string | number[], lottieObj: any, immutable = true) => {
   const genSourceLottieColor = convertColorToLottieColor(sourceColor);
   const genTargetLottieColor = convertColorToLottieColor(targetColor);
   if (!genSourceLottieColor || !genTargetLottieColor) {
@@ -67,7 +67,7 @@ export const replaceColor = (sourceColor: string | number[], targetColor: string
 
     return obj;
   }
-  return doReplace(genSourceLottieColor, genTargetLottieColor, cloneDeep(lottieObj));
+  return doReplace(genSourceLottieColor, genTargetLottieColor, immutable ? cloneDeep(lottieObj) : lottieObj);
 };
 
 export const flatten = (targetColor: string | number[], lottieObj: any) => {
