@@ -52,15 +52,27 @@ export const replaceColor = (
       if (sourceLottieColor[0] === obj.s[0] && sourceLottieColor[1] === obj.s[1] && sourceLottieColor[2] === obj.s[2]) {
         obj.s = [...targetLottieColor, 1];
       }
-    } else if (obj.c && obj.c.k) {
+    } else if (obj.c && obj.c.k) { // Handling Solid Colors
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
         doReplace(sourceLottieColor, targetLottieColor, obj.c.k);
       } else if (
-        sourceLottieColor[0] === round(obj.c.k[0]) &&
-        sourceLottieColor[1] === round(obj.c.k[1]) &&
-        sourceLottieColor[2] === round(obj.c.k[2])
+        Math.abs(sourceLottieColor[0] - round(obj.c.k[0])) < 0.003 &&
+        Math.abs(sourceLottieColor[1] - round(obj.c.k[1])) < 0.003 &&
+        Math.abs(sourceLottieColor[2] - round(obj.c.k[2])) < 0.003
       ) {
         obj.c.k = targetLottieColor;
+      }
+    } else if (obj.g && obj.g.k && obj.g.k.k && obj.g.k.k.length % 4 === 0) { // Handling gradients
+      for (let i = 0; i < obj.g.k.k.length; i += 4) {
+        if (
+          Math.abs(round(sourceLottieColor[0]) - round(obj.g.k.k[i + 1])) < 0.003 &&
+          Math.abs(round(sourceLottieColor[1]) - round(obj.g.k.k[i + 2])) < 0.003 &&
+          Math.abs(round(sourceLottieColor[2]) - round(obj.g.k.k[i + 3])) < 0.003
+        ) {
+          obj.g.k.k[i + 1] = targetLottieColor[0];
+          obj.g.k.k[i + 2] = targetLottieColor[1];
+          obj.g.k.k[i + 3] = targetLottieColor[2];
+        }
       }
     } else {
       for (const key in obj) {
@@ -147,8 +159,18 @@ const convertLottieColorToRgba = (lottieColor: number[]) => {
 
 export const getColors = (lottieObj: any): any => {
   const res: any = [];
+
   function doGet(obj: any) {
-    if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
+    if (obj.g && obj.g.k && obj.g.k.k && Array.isArray(obj.g.k.k) && obj.g.k.k.length % 4 === 0) {
+      if (Array.isArray(obj.g.k.k) && typeof obj.g.k.k[0] !== 'number') {
+        doGet(obj.g.k.k);
+      }
+      const tmpColors = [...obj.g.k.k];
+      while (tmpColors.length) {
+        const color = [...tmpColors.splice(1, 3), tmpColors.shift()];
+        res.push(convertLottieColorToRgba(color));
+      }
+    } else if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
       res.push(convertLottieColorToRgba(obj.s));
     } else if (obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
