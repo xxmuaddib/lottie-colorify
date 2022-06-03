@@ -27,6 +27,13 @@ const convertColorToLottieColor = (color: string | number[] | undefined) => {
       Math.round((color[1] / 255) * 1000) / 1000,
       Math.round((color[2] / 255) * 1000) / 1000,
     ];
+  } else if (typeof color === 'object' && color.length === 4 && color.every((item) => item >= 0 && item <= 255)) {
+    return [
+      Math.round((color[0] / 255) * 1000) / 1000,
+      Math.round((color[1] / 255) * 1000) / 1000,
+      Math.round((color[2] / 255) * 1000) / 1000,
+      Math.round((color[3] / 255) * 1000) / 1000,
+    ];
   } else if (!color) {
     return undefined;
   } else {
