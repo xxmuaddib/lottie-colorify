@@ -89,7 +89,11 @@ export const flatten = (targetColor: string | number[], lottieObj: any, immutabl
       } else {
         obj.c.k = targetLottieColor;
       }
-    } else {
+    } 
+    else if (obj.layers && Array.isArray(obj.layers) && obj.layers.length > 0) {
+            obj.layers[2].ef[0].ef[0].v.k = targetLottieColor
+        }
+    else {
       for (const key in obj) {
         if (typeof obj[key] === 'object') {
           doFlatten(targetLottieColor, obj[key]);
