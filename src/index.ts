@@ -11,26 +11,44 @@ export const colorify = (destColors: (string | number[] | undefined)[] = [], lot
 };
 
 const convertColorToLottieColor = (color: string | number[] | undefined) => {
-  if (typeof color === 'string' && color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+  if (typeof color === 'string' && color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i)) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(color);
     if (!result) {
-      throw new Error('Color can be only hex or rgb array (ex. [10,20,30])');
+      throw new Error('Color can be only hex or rgba format (ex. [10,20,30,0.5])');
     }
-    return [
+
+    const colorArray = [
       Math.round((parseInt(result[1], 16) / 255) * 1000) / 1000,
       Math.round((parseInt(result[2], 16) / 255) * 1000) / 1000,
       Math.round((parseInt(result[3], 16) / 255) * 1000) / 1000,
     ];
-  } else if (typeof color === 'object' && color.length === 3 && color.every((item) => item >= 0 && item <= 255)) {
-    return [
+
+    if (result[4]) {
+      colorArray.push(parseInt(result[4], 16) / 255);
+    }
+
+    return colorArray;
+  } else if (
+      typeof color === 'object' &&
+      color.length >= 3 &&
+      color.length <= 4 &&
+      color.every((item) => item >= 0 && item <= 255)) {
+
+    const colorArray = [
       Math.round((color[0] / 255) * 1000) / 1000,
       Math.round((color[1] / 255) * 1000) / 1000,
       Math.round((color[2] / 255) * 1000) / 1000,
     ];
+
+    if (color.length === 4) {
+      colorArray.push(color[3]);
+    }
+
+    return colorArray;
   } else if (!color) {
     return undefined;
   } else {
-    throw new Error('Color can be only hex or rgb array (ex. [10,20,30])');
+    throw new Error('Color can be only hex or rgba format (ex. [10,20,30,0.5])');
   }
 };
 
@@ -49,9 +67,23 @@ export const replaceColor = (
   }
   function doReplace(sourceLottieColor: number[], targetLottieColor: number[], obj: any) {
     if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
-      if (sourceLottieColor[0] === obj.s[0] && sourceLottieColor[1] === obj.s[1] && sourceLottieColor[2] === obj.s[2]) {
-        obj.s = [...targetLottieColor, 1];
+      if (
+          sourceLottieColor[0] === round(obj.s[0]) &&
+          sourceLottieColor[1] === round(obj.s[1]) &&
+          sourceLottieColor[2] === round(obj.s[2])
+      ) {
+        if ((sourceLottieColor.length < 4 && obj.s[3] === 1) ||
+            (sourceLottieColor.length === 4 && sourceLottieColor[3] === obj.s[3])
+        ) {
+          obj.s = [
+            targetLottieColor[0],
+            targetLottieColor[1],
+            targetLottieColor[2],
+            targetLottieColor[3] ? targetLottieColor[3] : 1,
+          ];
+        }
       }
+
     } else if (obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
         doReplace(sourceLottieColor, targetLottieColor, obj.c.k);
@@ -60,7 +92,20 @@ export const replaceColor = (
         sourceLottieColor[1] === round(obj.c.k[1]) &&
         sourceLottieColor[2] === round(obj.c.k[2])
       ) {
-        obj.c.k = targetLottieColor;
+        if ((sourceLottieColor.length < 4 && obj.c.k.length < 4) ||
+            (sourceLottieColor.length < 4 && obj.c.k.length === 4 && obj.c.k[3] === 1) ||
+            (sourceLottieColor.length === 4 && obj.c.k.length === 4 && sourceLottieColor[3] === obj.c.k[3])
+        ) {
+          obj.c.k = [
+            targetLottieColor[0],
+            targetLottieColor[1],
+            targetLottieColor[2],
+          ];
+
+          if (sourceLottieColor.length === 4) {
+            obj.c.k.push(targetLottieColor[3] ? targetLottieColor[3] : 1);
+          }
+        }
       }
     } else {
       for (const key in obj) {
@@ -149,12 +194,20 @@ export const getColors = (lottieObj: any): any => {
   const res: any = [];
   function doGet(obj: any) {
     if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
-      res.push(convertLottieColorToRgba(obj.s));
+      if (obj.s[3] !== 1) {
+        res.push(convertLottieColorToRgba(obj.s));
+      } else {
+        res.push(convertLottieColorToRgb(obj.s));
+      }
     } else if (obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
         doGet(obj.c.k);
       } else {
-        res.push(convertLottieColorToRgb(obj.c.k));
+        if (obj.c.k.length === 4 && obj.c.k[3] !== 1) {
+          res.push(convertLottieColorToRgba(obj.c.k));
+        } else {
+          res.push(convertLottieColorToRgb(obj.c.k));
+        }
       }
     } else {
       for (const key in obj) {
