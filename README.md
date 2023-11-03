@@ -44,6 +44,25 @@ const animation = Lottie.loadAnimation({
 });
 ```
 
+To replace multiple colors of a Lottie JSON:
+
+```jsx static
+import Lottie from 'lottie-web';
+import { replaceColors } from 'lottie-colorify';
+import SomeAnimation from './SomeAnimation.json';
+
+const animation = Lottie.loadAnimation({
+  container: container.current,
+  animationData: replaceColors(
+    [
+      ['#ff0071', '#cccccc'],
+      ['#f6f6f6', '#000000'],
+    ],
+    LoadingAnimation,
+  ),
+});
+```
+
 To flatten a Lottie JSON and use only one color:
 
 ```jsx static
@@ -81,6 +100,13 @@ replaceColor takes 3 arguments
 1. source color (the color to look for in a Lottie JSON)
 2. target color (the replacement color)
 3. Lottie animation
+
+## replaceColors function
+
+replaceColors takes 2 arguments
+
+1. an array of elements containing a `[sourceColor, targetColor]` pair
+2. Lottie animation
 
 ## flatten function
 
