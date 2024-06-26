@@ -48,11 +48,11 @@ export const replaceColor = (
     throw new Error('Proper colors must be used for both source and target');
   }
   function doReplace(sourceLottieColor: number[], targetLottieColor: number[], obj: any) {
-    if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
+    if (obj && obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
       if (sourceLottieColor[0] === obj.s[0] && sourceLottieColor[1] === obj.s[1] && sourceLottieColor[2] === obj.s[2]) {
         obj.s = [...targetLottieColor, 1];
       }
-    } else if (obj.c && obj.c.k) {
+    } else if (obj && obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
         doReplace(sourceLottieColor, targetLottieColor, obj.c.k);
       } else if (
@@ -81,9 +81,9 @@ export const flatten = (targetColor: string | number[], lottieObj: any, immutabl
     throw new Error('Proper colors must be used for target');
   }
   function doFlatten(targetLottieColor: number[], obj: any) {
-    if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
+    if (obj && obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
       obj.s = [...targetLottieColor, 1];
-    } else if (obj.c && obj.c.k) {
+    } else if (obj && obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
         doFlatten(targetLottieColor, obj.c.k);
       } else {
@@ -105,12 +105,12 @@ export const flatten = (targetColor: string | number[], lottieObj: any, immutabl
 const modifyColors = (colorsArray: any, lottieObj: any) => {
   let i = 0;
   function doModify(colors: any, obj: any) {
-    if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
+    if (obj && obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
       if (colors[i]) {
         obj.s = [...colors[i], 1];
       }
       i++;
-    } else if (obj.c && obj.c.k) {
+    } else if (obj && obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
         doModify(colors, obj.c.k);
       } else {
@@ -148,7 +148,7 @@ const convertLottieColorToRgba = (lottieColor: number[]) => {
 export const getColors = (lottieObj: any): any => {
   const res: any = [];
   function doGet(obj: any) {
-    if (obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
+    if (obj && obj.s && Array.isArray(obj.s) && obj.s.length === 4) {
       res.push(convertLottieColorToRgba(obj.s));
     } else if (obj.c && obj.c.k) {
       if (Array.isArray(obj.c.k) && typeof obj.c.k[0] !== 'number') {
@@ -168,4 +168,10 @@ export const getColors = (lottieObj: any): any => {
   }
   doGet(lottieObj);
   return res;
+};
+
+export const replaceColors = (colorsPair: Array<[string | number[], string | number[]]>, lottie: any): any => {
+  return colorsPair.reduce((computed, [sourceColor, targetColor]) => {
+    return replaceColor(sourceColor, targetColor, computed);
+  }, lottie);
 };
