@@ -1,5 +1,9 @@
 # lottie-colorify
 
+## Note
+> I am sorry for leaving this package for a while. currently I am actively maintaining it, so will be happy to review your PRs and merge.
+> Also, I will be doing a heavy refactor of the package in the coming 2 months. So if you have any ideas, feel free to write them up in the issues.
+
 Change colors of your lottie animations easily from code.
 
 ## Installation
