@@ -11,33 +11,36 @@
     "type": "git",
     "url": "git+https://github.com/xxmuaddib/lottie-colorify.git"
   },
-  "keywords": "lottie",
+  "keywords": [
+    "lottie",
+    "colorify",
+    "color",
+    "animation"
+  ],
   "scripts": {
-    "build:umd": "webpack",
-    "build:cjs": "tsc",
-    "build": "npm run build:umd && npm run build:cjs",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
+    "build": "vite build",
+    "format": "eslint . --fix && prettier . --write",
+    "lint": "eslint . && prettier . --check",
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "files": [
     "lib/**/*"
   ],
   "devDependencies": {
-    "prettier": "^2.1.1",
-    "ts-loader": "^8.0.3",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.0.2",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "@typescript-eslint/eslint-plugin": "^8.4.0",
+    "@typescript-eslint/parser": "^8.4.0",
+    "eslint": "^9.9.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.3",
+    "vite-plugin-dts": "^4.1.0",
+    "vitest": "2.0.5"
   },
-  "dependencies": {
-    "@types/lodash.clonedeep": "^4.5.6",
-    "lodash.clonedeep": "^4.5.0"
-  }
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
