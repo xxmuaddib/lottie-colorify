@@ -8,7 +8,7 @@
     <div style="width: 100%; height: 100%; background-color: #333" id="bodymovin"></div>
 
     <script>
-      requirejs(['../../lib/umd/index'], function (lc) {
+      requirejs(['../../lib/index.umd'], function (lc) {
         $.getJSON('https://assets6.lottiefiles.com/packages/lf20_guwqiaxe.json', function (data) {
           var animData = {
             wrapper: document.getElementById('bodymovin'),
@@ -16,7 +16,7 @@
             loop: true,
             prerender: true,
             autoplay: true,
-            animationData: lc.flatten('#ff0000', data),
+            animationData: lc.flatten('#BADA55', data),
           };
           var anim = bodymovin.loadAnimation(animData);
         });
