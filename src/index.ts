@@ -170,7 +170,7 @@ export const getColors = (lottieObj: any): any => {
   return res;
 };
 
-export const replaceColors = (colorsPair: Array<[string | number[], string | number[]]>, lottie: any): any => {
+export const replaceColors = (colorsPair: [string | number[], string | number[]][], lottie: any): any => {
   return colorsPair.reduce((computed, [sourceColor, targetColor]) => {
     return replaceColor(sourceColor, targetColor, computed);
   }, lottie);

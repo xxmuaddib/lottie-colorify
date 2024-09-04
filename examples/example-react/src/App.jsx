@@ -5,11 +5,16 @@ import LottieSample from './LottieSample.json';
 import './App.css';
 
 function App() {
-  const container = useRef(null);
-  const containerOriginal = useRef(null);
-  const containerFlat = useRef(null);
+  const container = useRef();
+  const containerOriginal = useRef();
+  const containerFlat = useRef();
 
   useEffect(() => {
+    Lottie.loadAnimation({
+      container: containerFlat.current,
+      animationData: flatten('#ef4efa', LottieSample),
+    });
+
     Lottie.loadAnimation({
       container: container.current,
       animationData: colorify(
@@ -100,20 +105,14 @@ function App() {
       ),
     });
 
-    Lottie.loadAnimation({
-      container: containerFlat.current,
-      animationData: flatten('#ef4efa', LottieSample),
-    });
-
-    // TODO: LottieSample is destroyed after using it. You can't use it again after using following block:
-    // BLOCK START
+    // Basic Lottie usage
     Lottie.loadAnimation({
       container: containerOriginal.current,
       animationData: LottieSample,
     });
-    // BLOCK END
-    // You cannot use LottieSample here. Need to investigate
   }, []);
+
+
 
   return (
     <div className="App">

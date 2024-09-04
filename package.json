@@ -11,12 +11,15 @@
     "type": "git",
     "url": "git+https://github.com/xxmuaddib/lottie-colorify.git"
   },
-  "keywords": "lottie",
+  "keywords": [
+    "lottie",
+    "colorify",
+    "color",
+    "animation"
+  ],
   "scripts": {
-    "build:umd": "webpack",
-    "build:cjs": "tsc",
-    "build": "npm run build:umd && npm run build:cjs",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "build": "vite build",
+    "format": "prettier . --write",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint",
@@ -28,13 +31,12 @@
     "lib/**/*"
   ],
   "devDependencies": {
-    "prettier": "^2.1.1",
-    "ts-loader": "^8.0.3",
+    "prettier": "^3.3.3",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.0.2",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "typescript": "^5.5.4",
+    "vite": "^5.4.3",
+    "vite-plugin-dts": "^4.1.0"
   },
   "dependencies": {
     "@types/lodash.clonedeep": "^4.5.6",
