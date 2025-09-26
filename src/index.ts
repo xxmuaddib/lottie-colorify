@@ -175,3 +175,77 @@ export const replaceColors = (colorsPair: Array<[string | number[], string | num
     return replaceColor(sourceColor, targetColor, computed);
   }, lottie);
 };
+
+
+
+/**
+ *
+ * Lazy designers are exporting icons with dummy rectangle that is pure white and acts as a background.
+ * We need to remove it otherwise the color will be replaced by the lottie-colorify resulting in an ugly icon with big rectangle.
+ *
+ */
+export const getFixedAnimateLottie = (json: unknown) => {
+  try {
+      const lottieJson = JSON.parse(JSON.stringify(json)) as any;
+
+      if (!lottieJson || typeof lottieJson !== 'object') {
+          return lottieJson;
+      }
+
+      if (!lottieJson.layers || !Array.isArray(lottieJson.layers)) {
+          return lottieJson;
+      }
+
+      // Filter out layers that are clearly background rectangles from lazy designers
+      lottieJson.layers = lottieJson.layers.filter((layer: any) => {
+          // Skip if not a shape layer
+          if (layer.ty !== 4 || !layer.shapes || !Array.isArray(layer.shapes)) {
+              return true;
+          }
+
+          // Look for layers with rectangle shapes and white/black fills
+          const hasProblematicBackground = layer.shapes.some((shape: any) => {
+              if (!shape.it || !Array.isArray(shape.it)) {
+                  return false;
+              }
+
+              let hasRectangle = false;
+              let hasWhiteOrBlackFill = false;
+
+              shape.it.forEach((item: any) => {
+                  if (
+                      item.ty === 'rc' &&
+                      // rect start point p (0,0)
+                      item?.p?.k?.length === 2 &&
+                      item?.p?.k?.[0] === 0 &&
+                      item?.p?.k?.[1] === 0 &&
+                      // rect size, full icon area (64,64) or larger -  there are some icons with 65.5x64 or 64x65.5 or larger than 64x64
+                      item?.s?.k?.length === 2 &&
+                      item?.s?.k?.[0] >= 64 &&
+                      item?.s?.k?.[1] >= 64
+                  ) {
+                      hasRectangle = true;
+                  }
+
+                  // Check for 100% white fill
+                  if (item.ty === 'fl' && item.c?.k && Array.isArray(item.c.k)) {
+                      const [red, green, blue, alpha] = item.c.k;
+
+                      if (red === 1 && green === 1 && blue === 1 && alpha === 1) {
+                          hasWhiteOrBlackFill = true;
+                      }
+                  }
+              });
+
+              return hasRectangle && hasWhiteOrBlackFill;
+          });
+
+          return !hasProblematicBackground;
+      });
+
+      return lottieJson;
+
+  } catch (error) {
+      return json;
+  }
+};

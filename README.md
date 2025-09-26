@@ -118,3 +118,24 @@ flatten takes 2 arguments
 
 1. target color (the replacement color)
 2. Lottie animation
+
+## getFixedAnimateLottie function
+
+If you encounter issues with coloring animations that have a solid white or black background covering the entire animation, use the `getFixedAnimateLottie` function first to remove problematic background layers.
+
+Some Lottie files are exported with unnecessary white or black rectangle backgrounds (usually 64x64 pixels or larger) that cover the entire animation area. These background layers interfere with color replacement functions, resulting in animations with unwanted colored rectangles.
+
+```jsx static
+import Lottie from 'lottie-web';
+import { getFixedAnimateLottie, colorify } from 'lottie-colorify';
+import SomeAnimation from './SomeAnimation.json';
+
+// First remove problematic background layers, then apply colors
+const cleanedAnimation = getFixedAnimateLottie(SomeAnimation);
+const animation = Lottie.loadAnimation({
+  container: container.current,
+  animationData: colorify(['#ef32d0', '#fe0088'], cleanedAnimation),
+});
+```
+
+**Note:** This function specifically targets rectangle shapes at position (0,0) with dimensions ≥64x64 pixels that have pure white fills (RGB: 1,1,1,1). It safely preserves all other layers and content in your animation.
